@@ -70,18 +70,31 @@ def write_files_in_xlsx(table_path):
     work_book.save('example.xlsx')
 
 
+def null_one(number):
+    """
+    Возвращает 0 при аргументе равном 1 и наоборот
+    :param number: int
+    :return: int
+    """
+    if number == 0:
+        return 1
+    if number == 1:
+        return 0
+
+
 def process_image(path, text, output_folder, max_res_x=3000, max_res_y=2250,
-                  max_size=2.0, opacity=90, font_size=50):
+                  max_size=2.0, opacity=90, font_size=50, corner=(1, 1)):
     """
     Считывает изображение по пути path, сохраняет его в выходную папку с этикеткой нанесенной поверх изображения
-    :param path: путь до исходного изображения
-    :param text: текст этикетки
-    :param output_folder: папка с выходными данными
-    :param max_res_x: максимальное разрешение по x
-    :param max_res_y: максимальное разрешение по y
-    :param max_size: максимальный размер в Мб
-    :param opacity: прозрачность фона этикетки
-    :param font_size: размер шрифта
+    :param path: str, путь до исходного изображения
+    :param text: str, текст этикетки
+    :param output_folder: str, папка с выходными данными
+    :param max_res_x: int, максимальное разрешение по x
+    :param max_res_y: int, максимальное разрешение по y
+    :param max_size: float, максимальный размер в Мб
+    :param opacity: int, прозрачность фона этикетки
+    :param font_size: int, размер шрифта
+    :param corner: tuple, угол для размещения этикетки на изображении
     """
     image = Image.open(path)
     # check x asis
@@ -101,12 +114,13 @@ def process_image(path, text, output_folder, max_res_x=3000, max_res_y=2250,
     draw = ImageDraw.Draw(image, 'RGBA')
     font = ImageFont.truetype('Lora-Regular.ttf', font_size)
     text_size = draw.textsize(text, font)
-    draw.rectangle(
-        (image.size[0] - text_size[0] - 51, image.size[1] - text_size[1] - 51, image.size[0] - 1, image.size[1] - 1),
-        fill=(255, 255, 255, 255 * opacity // 100),
-        outline=(0, 0, 0), width=4)
+    rectangle_coords = (((image.size[0] - text_size[0] - font_size) * corner[0],
+                         (image.size[1] - text_size[1] - font_size) * corner[1]),
+                        ((image.size[0] - 1) * corner[0] + (text_size[0] + font_size) * null_one(corner[0]),
+                         (image.size[1] - 1) * corner[1] + (text_size[1] + font_size) * null_one(corner[1])))
+    draw.rectangle(rectangle_coords, fill=(255, 255, 255, 255 * opacity // 100), outline=(0, 0, 0), width=4)
     # draw text
-    draw.text((image.size[0] - text_size[0] - 26, image.size[1] - text_size[1] - 26), text, font=font,
+    draw.text((rectangle_coords[0][0] + font_size // 2, rectangle_coords[0][1] + font_size // 2), text, font=font,
               fill=(0, 0, 0, 250))
 
     # output file
