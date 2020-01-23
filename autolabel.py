@@ -1,9 +1,9 @@
 # coding=utf-8
+import argparse
 import io
 import os
 import shutil
 import time
-import argparse
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
@@ -13,13 +13,13 @@ from openpyxl import load_workbook
 def load_defaults(table_path):
     """
     Читает из таблицы настройки для обработки изображений
-    :param table_path: путь до таблицы с настройками
-    :return: max_res_x: максимальное разрешение по x
-    :return: max_res_y: максимальное разрешение по y
-    :return: max_size: максимальный размер в Мб
-    :return: sample_text: стандартный текст (при отсутствии такового в таблице)
-    :return: opacity: прозрачность фона этикетки
-    :return: font_size: размер шрифта
+    :param table_path: str, путь до таблицы с настройками
+    :return: max_res_x: int, максимальное разрешение по x
+    :return: max_res_y: int, максимальное разрешение по y
+    :return: max_size: float, максимальный размер в Мб
+    :return: sample_text: str, стандартный текст (при отсутствии такового в таблице)
+    :return: opacity: int, прозрачность фона этикетки
+    :return: font_size: int, размер шрифта
     """
     wb = load_workbook(filename=table_path)
     ws = wb['example']
@@ -35,9 +35,9 @@ def load_defaults(table_path):
 def load_rows_from_xlsx(table_path, sample_text=None):
     """
     Загружает пути и тексты для обработки фотографий из таблицы
-    :param table_path: путь до таблицы
-    :param sample_text: стандартный текст при отсутствии такового в таблице
-    :return: словарь "{путь}": "{текст}", или None если в таблице не было найдено путей до файлов
+    :param table_path: str, путь до таблицы
+    :param sample_text: str, стандартный текст при отсутствии такового в таблице
+    :return: dict, словарь "{путь}": "{текст}", или None если в таблице не было найдено путей до файлов
     """
     wb = load_workbook(filename=table_path)
     ws = wb['example']
@@ -59,7 +59,7 @@ def write_files_in_xlsx(table_path):
     """
     Считывает файлы из папки по пути, записанному в определенную ячейку
     таблицы по пути table_path, и записывает их пути обратно в таблицу
-    :param table_path: путь до таблицы
+    :param table_path: str, путь до таблицы
     """
     work_book = load_workbook(table_path)
     work_sheet = work_book['example']
@@ -121,8 +121,8 @@ def check_size(image, quality=90):
     """
     Проверка размера изображения на выходе
     :param image: обьект класса PIL.Image
-    :param quality: JPEG quality
-    :return: размер изображения в байтах
+    :param quality: int, JPEG quality
+    :return: int, размер изображения в байтах
     """
     out = io.BytesIO()
     image.save(out, format='jpeg', quality=quality)
