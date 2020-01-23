@@ -1,4 +1,4 @@
-## -*- coding: utf-8 -*-
+# coding=utf-8
 import io
 import os
 import shutil
@@ -143,7 +143,7 @@ def main(args):
             shutil.rmtree(output_folder)
         # create output folder
         print('Папка результатов: {}'.format(output_folder))
-        time.sleep(0.5) # stupid workaround for WinError 5
+        time.sleep(0.5)  # stupid workaround for WinError 5
         Path(output_folder).mkdir(parents=True, exist_ok=True)
         # process files
         for key in file_dict:
