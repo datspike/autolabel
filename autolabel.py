@@ -64,7 +64,9 @@ def write_files_in_xlsx(table_path):
     work_book = load_workbook(table_path)
     work_sheet = work_book['example']
     file_path = work_sheet['B2'].value
-    file_list = [entry for entry in os.scandir(file_path) if entry.is_file()]
+    file_list = [entry for entry in os.scandir(file_path) if entry.is_file()
+                 and (entry.path.lower().endswith('jpeg') or entry.path.lower().endswith('jpg')
+                      or entry.path.lower().endswith('png'))]
     for file in file_list:
         work_sheet.cell(row=file_list.index(file) + 3, column=2).value = file.path
     work_book.save('example.xlsx')
