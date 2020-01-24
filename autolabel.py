@@ -69,7 +69,7 @@ def write_files_in_xlsx(table_path):
                       or entry.path.lower().endswith('png'))]
     for file in file_list:
         work_sheet.cell(row=file_list.index(file) + 3, column=2).value = file.path
-    work_book.save('example.xlsx')
+    work_book.save(table_path)
 
 
 def null_one(number):
