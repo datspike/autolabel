@@ -114,7 +114,7 @@ def process_image(path, text, output_folder, max_res_x=3000, max_res_y=2250,
 
     # add rectangle
     draw = ImageDraw.Draw(image, 'RGBA')
-    font = ImageFont.truetype('Lora-Regular.ttf', font_size)
+    font = ImageFont.truetype(str(Path(os.path.abspath(__file__)).parent / 'Lora-Regular.ttf'), font_size)
     text_size = draw.textsize(text, font)
     rectangle_coords = (((image.size[0] - text_size[0] - font_size) * corner[0],
                          (image.size[1] - text_size[1] - font_size) * corner[1]),
